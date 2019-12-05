@@ -15,7 +15,8 @@ using namespace std;
 
 YearData::YearData()
 {
-	m_initialized = false; // checks if year is initialized, used during data processing
+	// checks if year is initialized, used during data processing
+	m_initialized = false;
 	m_year = 0;
 	m_months = std::vector<MonthData>(MONTHS_IN_YEAR);
 }
@@ -134,11 +135,11 @@ double DayData::getAvgTemp() const
 	}
 	else if (maxTempSum != -9999)
 	{
-			return maxTempSum;
+		return maxTempSum;
 	}
 	else if (minTempSum != -9999)
 	{
-			return minTempSum;
+		return minTempSum;
 	}
 	else
 	{
@@ -206,10 +207,9 @@ const std::vector<int>& DayData::getMinTemps() const
 	return m_minTemps;
 }
 
-
 void DayData::addTmax(int tmax)
 {
-	// Only add the data if its valid
+	// Only add the data if it's valid
 	if (tmax != -9999)
 	{
 		m_maxTemps.push_back(tmax);
@@ -218,7 +218,7 @@ void DayData::addTmax(int tmax)
 
 void DayData::addTmin(int tmin)
 {
-	// Only add the data if its valid
+	// Only add the data if it's valid
 	if (tmin != -9999)
 	{
 		m_minTemps.push_back(tmin);

@@ -5,60 +5,57 @@
 #define MONTHS_IN_YEAR 12
 #define MAX_DAYS_IN_MONTH 31
 
-class MonthData; // forward declarations
+class MonthData;
 class DayData;
 
-class YearData {
+class YearData
+{
+	public:
+		YearData();
+		void initialize(int year);
+		MonthData * getMonth(int index);
+		bool isInitialized() const;
 
-public:
-	YearData();
-	void initialize(int year);
-	MonthData * getMonth(int index);
-	bool isInitialized() const;
-
-private:
-	int m_year;
-	std::vector <MonthData> m_months;
-	bool m_initialized;
+	private:
+		int m_year;
+		std::vector <MonthData> m_months;
+		bool m_initialized;
 };
 
-class MonthData {
+class MonthData
+{
+	public:
+		MonthData();
+		void initialize(int month);
+		DayData * getDay(int index);
 
-public:
-	MonthData();
-	void initialize(int month);
-
-	DayData * getDay(int index);
-
-private:
-	std::vector <DayData> m_days;
-	bool m_initialized;
+	private:
+		std::vector <DayData> m_days;
+		bool m_initialized;
 };
 
-class DayData {
+class DayData
+{
+	public:
+		DayData();
 
-public:
-	DayData();
+		bool dayHasData() const;
+		double getAvgTemp() const;
 
-	bool dayHasData() const;
+		bool isDayAbove100() const;
+		bool isDayBelow0() const;
+		int getMaxTemp() const;
+		int getMinTemp() const;
 
-	double getAvgTemp() const;
+		const std::vector<int> & getMaxTemps() const;
+		const std::vector<int> & getMinTemps() const;
 
-	bool isDayAbove100() const;
-	bool isDayBelow0() const;
+		void addTmax(int tmax);
+		void addTmin(int tmin);
 
-	int getMaxTemp() const;
-	int getMinTemp() const;
-
-	const std::vector<int> & getMaxTemps() const;
-	const std::vector<int> & getMinTemps() const;
-
-	void addTmax(int tmax);
-	void addTmin(int tmin);
-
-private:
-	std::vector<int> m_maxTemps;
-	std::vector<int> m_minTemps;
+	private:
+		std::vector<int> m_maxTemps;
+		std::vector<int> m_minTemps;
 };
 
 #endif

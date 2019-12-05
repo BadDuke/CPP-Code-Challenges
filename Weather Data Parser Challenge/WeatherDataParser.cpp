@@ -12,7 +12,8 @@
 
 using namespace std;
 
-// Because pieces of string are not null terminated, we need to figure out how to slice null terminated substring and convert to int
+/* Because pieces of string are not null terminated, we need to figure out how to
+   slice null terminated substring and convert to int */
 int extractIntFromAscii(char * asciiPtr, int numCharsToExtract)
 {
 	char * buffer = new char[numCharsToExtract + 1]; // Add one for null termination
@@ -25,13 +26,15 @@ int extractIntFromAscii(char * asciiPtr, int numCharsToExtract)
 	return returnValue;
 }
 
-bool isTmax(char * asciiPtr) // Checks whether the current line we're reading is TMAX
+// Checks whether the current line we're reading is TMAX
+bool isTmax(char * asciiPtr)
 {
 	char buffer[5] = {};
 	strncpy(buffer, asciiPtr, sizeof(buffer));
 	buffer[sizeof(buffer) - 1] = 0; // null terminate
 
-	return (strcmp(buffer, "TMAX") == 0); // '0' in this case represents that they're equal, thus true
+	// '0' in this case represents that they're equal, thus true
+	return (strcmp(buffer, "TMAX") == 0);
 }
 
 bool isTmin(char * asciiPtr)
@@ -40,12 +43,14 @@ bool isTmin(char * asciiPtr)
 	strncpy(buffer, asciiPtr, sizeof(buffer));
 	buffer[sizeof(buffer) - 1] = 0; // null terminate
 
-	return (strcmp(buffer, "TMIN") == 0); // '0' in this case represents that they're equal, thus true
+	// '0' in this case represents that they're equal, thus true
+	return (strcmp(buffer, "TMIN") == 0);
 }
 
 int extractTempValue(char * asciiPtr)
 {
-	char buffer[6] = {}; // maximum size of temperature data is 5 and we add one for the null terminator
+	// maximum size of temperature data is 5 and we add one for the null terminator
+	char buffer[6] = {};
 	strncpy(buffer, asciiPtr, sizeof(buffer));
 	buffer[sizeof(buffer) - 1] = 0; // null terminate
 
@@ -54,7 +59,8 @@ int extractTempValue(char * asciiPtr)
 
 int main()
 {
-	std::map<int, YearData> years; // use map because years are unique and map is a unique container
+	// use map because years are unique and map is a unique container
+	std::map<int, YearData> years;
 	std::string line;
 	std::ifstream myfile("state11_IL.txt");
 
@@ -66,24 +72,26 @@ int main()
 		while (std::getline(myfile, line)) // reading until end of file
 		{
 			char charString[1024] = {};
-			strncpy(charString, line.c_str(), sizeof(charString)); // copy the string into a non-const buffer (line.c_str() is const)
+			// copy the string into a non-const buffer (line.c_str() is const)
+			strncpy(charString, line.c_str(), sizeof(charString));
 			charString[sizeof(charString) - 1] = 0; // null terminate
 
 			int year = extractIntFromAscii(charString + 6, 4);
 
 			YearData * yearData = &years[year];
-			yearData->initialize(year);	// Initialize the year (if not initialized already)
+			// Initialize the year (if not initialized already)
+			yearData->initialize(year);
 
 			int month = extractIntFromAscii(charString + 10, 2);
-			MonthData * monthData = yearData->getMonth(month - 1);	// month is 1-indexed, so offset monthby 1
+			MonthData * monthData = yearData->getMonth(month - 1);// month is 1-indexed, so offset monthby 1
 
 			if (isTmax(charString + 12))
 			{
 				int day = 0;
-				for (int dayIndex = 16; dayIndex <= 256; dayIndex += 8) // based on the data format, extract temperature values
+				// based on the data format, extract temperature values
+				for (int dayIndex = 16; dayIndex <= 256; dayIndex += 8)
 				{
 					int tmax = extractTempValue(charString + dayIndex);
-
 					monthData->getDay(day)->addTmax(tmax);
 					day++;
 				}
@@ -91,7 +99,8 @@ int main()
 			else if (isTmin(charString + 12))
 			{
 				int day = 0;
-				for (int dayIndex = 16; dayIndex <= 256; dayIndex += 8) // based on the data format, extract temperature values
+				// based on the data format, extract temperature values
+				for (int dayIndex = 16; dayIndex <= 256; dayIndex += 8)
 				{
 					int tmin = extractTempValue(charString + dayIndex);
 
@@ -125,7 +134,8 @@ int main()
 				MonthData * monthData = yearData->getMonth(monthIndex);
 				
 				int validDaysInMonth = 0;
-				double monthlyTemperatureSum = 0.0;	// Since we are getting averages, we will cumulate all maxes and mins here.
+				// Since we are getting averages, we will cumulate all maxes and mins here.
+				double monthlyTemperatureSum = 0.0;
 
 				for (int dayIndex = 0; dayIndex < MAX_DAYS_IN_MONTH; dayIndex++)
 				{
@@ -151,7 +161,7 @@ int main()
 				}
 			
 				if (validDaysInMonth != 0) {
-					cout << "Average temperature for year " << it->first			// it->first is the key, the actual year
+					cout << "Average temperature for year " << it->first // it->first is the key, the actual year
 						<< " month " << monthIndex + 1 << " is: " << monthlyTemperatureSum / validDaysInMonth << endl;
 				}
 			}

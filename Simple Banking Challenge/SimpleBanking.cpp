@@ -2,14 +2,12 @@
 #include <cmath> // abs()
 #include <algorithm>
 
-// Static var initialization. All account numbers start at 1. 0 is invalid.
 unsigned int Account::lastId = 1;
 unsigned int Customer::lastId = 1;
 
-// Account class methods
 Account::Account()
 {
-	m_accountId = lastId++; // claim the unused ID, then increment lastId.
+	m_accountId = lastId++;
 	m_balance = 0.00;
 	m_customerIds = std::vector<unsigned int>();
 	m_overdrawEnabled = false;
@@ -19,19 +17,16 @@ Account::~Account()
 {
 }
 
-// Get the account ID
 unsigned int Account::getAccountId() const
 {
 	return m_accountId;
 }
 
-// Get a list of customer IDs associated with this account
 const std::vector<unsigned int>& Account::getCustomerIds() const
 {
 	return m_customerIds;
 }
 
-// Add a customer to this account.
 void Account::addCustomerId(unsigned int customerId)
 {
 	m_customerIds.push_back(customerId);
@@ -39,9 +34,10 @@ void Account::addCustomerId(unsigned int customerId)
 
 void Account::removeCustomerId(unsigned int customerId)
 {
-	for (int i = 0; i < m_customerIds.size(); i++) { // ***note: there's a simpler syntax
+	for (int i = 0; i < m_customerIds.size(); i++) {
 		if (m_customerIds.at(i) == customerId) {
-			m_customerIds[i] = 0;	// Invalidate the customer ID by setting it equal to 0 (effectively removes it)
+			// Invalidate the customer ID by setting it equal to 0 (effectively removes it)
+			m_customerIds[i] = 0;
 		}
 	}
 }
@@ -78,7 +74,7 @@ bool Account::deposit(double amount)
 	return true;
 }
 
-// Customer class methods
+
 Customer::Customer()
 {
 	m_accounts = std::vector<Account *>();
@@ -108,7 +104,8 @@ Account * Customer::getAccount(unsigned int accountIndex)
 	}
 	else
 	{
-		return 0;	// Nullptr if account not associated with this customer
+		// Nullptr if account not associated with this customer
+		return 0;
 	}
 }
 
@@ -120,7 +117,7 @@ void Customer::attachAccount(Account * account)
 
 void Customer::detachAccount(unsigned int accountIndex)
 {
-	m_accounts[accountIndex]->removeCustomerId(m_id);	// Remove ourself from the account
-
+	// Remove ourself from the account
+	m_accounts[accountIndex]->removeCustomerId(m_id);
 	m_accounts.erase(std::remove(m_accounts.begin(), m_accounts.end(), m_accounts[accountIndex]), m_accounts.end());	// remove the account from our list
 }
